@@ -18,11 +18,11 @@ Created on Feb 7, 2010
 brianthorne
 '''
 
-from scipysim.actors import Channel, Model, MakeChans
+from scipysim.actors import Channel, CompositeActor, MakeChans
 
 from scipysim.actors.math import Constant
 from scipysim.actors.signal import Split, Step
-from scipysim.actors.io import Writer, NumpyWriter
+from scipysim.actors.io import TextWriter, NumpyWriter
 
 import numpy as np
 import scipy
@@ -35,8 +35,9 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("Debugging Logger Enabled")
 
 
-class ControlStep(Model):
+class ControlStep(CompositeActor):
     '''This simulation is a P controller responding to a step input.'''
+
     def __init__(self):
         '''Create the components'''
         super(ControlStep, self).__init__()
@@ -55,18 +56,18 @@ class ControlStep(Model):
         src_dup = Split(wires['constant_src'], [wires['constant_out'], wires['constant_out_np']])
 
         # Create the signal source
-        step = Step(wires['step_src'], switch_time=60, resolution=freq, simulation_time=T)
+        step = Step(wires['step_src'], switch_time=60, simulation_time=T)
         step_dup = Split(wires['step_src'], [wires['step_out'], wires['step_out_np']])
 
         # keeping track of components
         self.components = [src, src_dup, step, step_dup]
 
-        src_out = Writer(wires['constant_out'], 'constant')
+        src_out = TextWriter(wires['constant_out'], 'constant')
         src_out_np = NumpyWriter(wires['constant_out_np'], 'constant')
         self.components.append(src_out)
         self.components.append(src_out_np)
 
-        step_out = Writer(wires['step_out'], 'step')
+        step_out = TextWriter(wires['step_out'], 'step')
         step_out_np = NumpyWriter(wires['step_out_np'], 'step')
         self.components.append(step_out)
         self.components.append(step_out_np)

@@ -18,14 +18,14 @@ Created on 13/12/2009
 @author: brian
 '''
 
-from scipysim.actors import MakeChans, Model
+from scipysim.actors import MakeChans, CompositeActor
 
 # from scipysim.actors.display import Plotter
 from scipysim.actors.logic import GreaterThan, PassThrough
 from scipysim.actors.math import Summer, Constant
 from scipysim.actors.math.trig import CTSinGenerator
 from scipysim.actors.signal import Ramp, Split
-from scipysim.actors.io import Writer
+from scipysim.actors.io import TextWriter
 
 
 import logging
@@ -34,7 +34,7 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("Debugging Logger Enabled")
 
 
-class Pulse_Width_Modulator( Model ):
+class Pulse_Width_Modulator(CompositeActor):
     """A PWM generation simulation.
     
     This example connects 3 sources (2 ramps and a random) to a summer block
@@ -74,9 +74,9 @@ class Pulse_Width_Modulator( Model ):
         self.components = [ramp_src, sin_src, const_src, offset_sin_sum, ramp_cloning_probe, sin_cloning_probe,
             subtractor, comparison, if_device, output_value_on, output_value_off]
 
-        ramp_out = Writer(wires['ramp_plot'], 'ramp_values')
-        sin_out = Writer(wires['sin_plot'], 'sine_values')
-        pwm_out = Writer(wires['pwm_value'], 'pwm_values')
+        ramp_out = TextWriter(wires['ramp_plot'], 'ramp_values')
+        sin_out = TextWriter(wires['sin_plot'], 'sine_values')
+        pwm_out = TextWriter(wires['pwm_value'], 'pwm_values')
         self.components.append(ramp_out)
         self.components.append(sin_out)
         self.components.append(pwm_out)

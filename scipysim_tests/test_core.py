@@ -1,10 +1,14 @@
-import unittest
-
 from scipysim.core.actor import Actor
 from scipysim.core.errors import NoProcessFunctionDefined
 
+from scipysim.core.event import EventTests, LastEventTests
+from scipysim.core.graph import NodeTests, GraphTests
+
+import unittest
+
 
 class ActorTests(unittest.TestCase):
+
     def setUp(self):
         self.block = Actor()
 
@@ -24,4 +28,3 @@ class ActorTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

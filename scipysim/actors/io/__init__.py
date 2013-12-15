@@ -5,11 +5,9 @@ memory efficient form.
 
 The Reader and Writer actors read and write data channels into a file.
 '''
+
 from bundle import Bundle
 from unbundle import Unbundle
-from reader import Reader
-from reader import TextReader
-from writer import Writer
-from numpy_reader import NumpyReader
-from numpy_writer import NumpyWriter
+from reader import NumpyReader, TextReader
+from writer import NumpyWriter, TextWriter
 

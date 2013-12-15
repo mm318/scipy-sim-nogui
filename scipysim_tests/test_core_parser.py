@@ -8,10 +8,11 @@ import os
 from Tkinter import Tk
 
 from parser import fill_tree
-from scipysim.gui.codegroup import make_tree
+# from scipysim.gui.codegroup import make_tree
 
 
-class CodeGroupTests( unittest.TestCase ):
+class CodeGroupTests(unittest.TestCase):    # TODO
+
     def setUp( self ):
         src_dir = os.path.normpath( __file__ + '../../../' )
         self.actor_dir = os.path.join( src_dir, 'actors' )
@@ -20,7 +21,6 @@ class CodeGroupTests( unittest.TestCase ):
 
     def tearDown( self ):
         pass
-
 
     def testParsingAllActors( self ):
         '''Parse the actors directory and create code group '''
@@ -32,5 +32,7 @@ class CodeGroupTests( unittest.TestCase ):
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testParsingAllActors']
+    # import sys
+    # sys.argv = ['', 'Test.testParsingAllActors']
     unittest.main()
+

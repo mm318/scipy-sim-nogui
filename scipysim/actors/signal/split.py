@@ -1,6 +1,7 @@
-from scipysim.actors import Actor, Channel, Event
-
 import logging
+
+from scipysim.actors import Actor, Channel, Event, LastEvent
+
 
 
 class Split(Actor):
@@ -30,18 +31,16 @@ class Split(Actor):
         logging.debug("Running split process")
 
         event = self.input_channel.get(True)     # this is blocking
-        if event is None:
+        if event.last:
             logging.info("We have finished splitting the data")
             self.stop = True
-            [q.put(None) for q in self.output_channels]
+            [q.put(event) for q in self.output_channels]
             return
 
         [q.put(event) for q in self.output_channels]
-        event = None
 
 
 import unittest
-
 class SplitTests(unittest.TestCase):
     '''Test the Split Actor'''
     def test_basic_split(self):
@@ -55,18 +54,18 @@ class SplitTests(unittest.TestCase):
         cloneQ = Split(q_in, [q_out1, q_out2])
         cloneQ.start()
         q_in.put(inp)
-        q_in.put(None)
+        q_in.put(LastEvent())
         cloneQ.join()
 
         out1 = q_out1.get()
         self.assertEquals(out1.value, inp.value)
         self.assertEquals(out1.tag, inp.tag)
-        self.assertEquals(q_out1.get(), None)
+        self.assertTrue(q_out1.get().last)
 
         out2 = q_out2.get()
         self.assertEquals(out2.value, inp.value)
         self.assertEquals(out2.tag, inp.tag)
-        self.assertEquals(q_out2.get(), None)
+        self.assertTrue(q_out2.get().last)
 
 if __name__ == "__main__":
     unittest.main()
